@@ -23,10 +23,9 @@ class AppRouter {
     switch (settings.name) {
       case AppRoutes.login:
         return MaterialPageRoute(builder: (_) => LoginScreen());
-//TODO
       // case AppRoutes.home:
       //   return MaterialPageRoute(builder: (_) => HomeScreen());
-      //
+
       // case AppRoutes.callList:
       //   return MaterialPageRoute(builder: (_) => CallListScreen());
       //
