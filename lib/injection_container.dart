@@ -56,4 +56,12 @@ Future<void> init() async {
   sl.registerLazySingleton(
         () => Connectivity(),
   );
+
+  // Check if ApiClient is already registered in the injection container.
+// If not, add this code to the init() function in injection_container.dart:
+
+// Register ApiClient
+//   sl.registerLazySingleton(
+//         () => ApiClient(sl()),
+//   );
 }

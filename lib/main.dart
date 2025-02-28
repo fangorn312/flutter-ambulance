@@ -15,7 +15,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AppProvider()),
         ChangeNotifierProvider(create: (_) => di.sl<AuthProvider>()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider(di.sl())),
       ],
       child: MyApp(),
     ),

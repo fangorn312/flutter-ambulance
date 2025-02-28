@@ -12,7 +12,8 @@ class NotificationCallScreen extends StatefulWidget {
   _NotificationCallScreenState createState() => _NotificationCallScreenState();
 }
 
-class _NotificationCallScreenState extends State<NotificationCallScreen> with SingleTickerProviderStateMixin {
+class _NotificationCallScreenState extends State<NotificationCallScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   CancelReason? _selectedReason;
@@ -39,9 +40,17 @@ class _NotificationCallScreenState extends State<NotificationCallScreen> with Si
     super.dispose();
   }
 
-  void _handleAccept(NotificationProvider provider) {
-    provider.acceptCall();
-    Navigator.of(context).pop();
+  Future<void> _handleAccept(NotificationProvider provider) async {
+    try {
+      await provider.acceptCall();
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка при принятии вызова: ${e.toString()}')),
+      );
+    }
   }
 
   void _showCancelReasonSelector() {
@@ -50,10 +59,19 @@ class _NotificationCallScreenState extends State<NotificationCallScreen> with Si
     });
   }
 
-  void _handleReject(NotificationProvider provider) {
+  Future<void> _handleReject(NotificationProvider provider) async {
     if (_selectedReason != null) {
-      provider.rejectCall(_selectedReason!.id);
-      Navigator.of(context).pop();
+      try {
+        await provider.rejectCall(_selectedReason!.id);
+        if (!mounted) return;
+        Navigator.of(context).pop();
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Ошибка при отклонении вызова: ${e.toString()}')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Пожалуйста, выберите причину отказа')),
@@ -78,8 +96,7 @@ class _NotificationCallScreenState extends State<NotificationCallScreen> with Si
           child: Stack(
             children: [
               _buildCallInfo(call),
-              if (_showReasonDialog)
-                _buildReasonSelector(notificationProvider),
+              if (_showReasonDialog) _buildReasonSelector(notificationProvider),
             ],
           ),
         ),
@@ -168,7 +185,9 @@ class _NotificationCallScreenState extends State<NotificationCallScreen> with Si
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    call.isUnknownPatient ? 'Пациент не известен' : call.patientName,
+                    call.isUnknownPatient
+                        ? 'Пациент не известен'
+                        : call.patientName,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
@@ -292,27 +311,32 @@ class _NotificationCallScreenState extends State<NotificationCallScreen> with Si
   }
 
   Widget _buildActionButtons() {
+    final provider = Provider.of<NotificationProvider>(context);
+
     return !_showReasonDialog
         ? Row(
-      children: [
-        Expanded(
-          child: AppButton(
-            text: 'ОТКЛОНИТЬ',
-            onPressed: _showCancelReasonSelector,
-            type: ButtonType.secondary,
-            icon: Icons.cancel,
-          ),
-        ),
-        SizedBox(width: 16),
-        Expanded(
-          child: AppButton(
-            text: 'ПРИНЯТЬ',
-            onPressed: () => _handleAccept(Provider.of<NotificationProvider>(context, listen: false)),
-            icon: Icons.check_circle,
-          ),
-        ),
-      ],
-    )
+            children: [
+              Expanded(
+                child: AppButton(
+                  text: 'ОТКЛОНИТЬ',
+                  onPressed:
+                      provider.isLoading ? null : _showCancelReasonSelector,
+                  type: ButtonType.secondary,
+                  icon: Icons.cancel,
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: AppButton(
+                  text: 'ПРИНЯТЬ',
+                  onPressed:
+                      provider.isLoading ? null : () => _handleAccept(provider),
+                  icon: Icons.check_circle,
+                  isLoading: provider.isLoading,
+                ),
+              ),
+            ],
+          )
         : Container(); // Hide buttons when showing reason selector
   }
 
@@ -338,26 +362,58 @@ class _NotificationCallScreenState extends State<NotificationCallScreen> with Si
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
-                  height: 250,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: cancelReasons.length,
-                    itemBuilder: (context, index) {
-                      final reason = cancelReasons[index];
-                      return RadioListTile<CancelReason>(
-                        title: Text(reason.name),
-                        value: reason,
-                        groupValue: _selectedReason,
-                        onChanged: (CancelReason? value) {
-                          setState(() {
-                            _selectedReason = value;
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
+                provider.isLoading
+                    ? Container(
+                        height: 150,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : provider.error.isNotEmpty
+                        ? Container(
+                            height: 150,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.error_outline,
+                                      color: Colors.red, size: 48),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Ошибка загрузки',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    provider.error,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 12),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 250,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: provider.cancelReasons.length,
+                              itemBuilder: (context, index) {
+                                final reason = provider.cancelReasons[index];
+                                return RadioListTile<CancelReason>(
+                                  title: Text(reason.name),
+                                  value: reason,
+                                  groupValue: _selectedReason,
+                                  onChanged: (CancelReason? value) {
+                                    setState(() {
+                                      _selectedReason = value;
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -372,8 +428,15 @@ class _NotificationCallScreenState extends State<NotificationCallScreen> with Si
                       child: Text('Отмена'),
                     ),
                     ElevatedButton(
-                      onPressed: () => _handleReject(provider),
-                      child: Text('Подтвердить'),
+                      onPressed: provider.isLoading
+                          ? null
+                          : () => _handleReject(provider),
+                      child: provider.isLoading
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2))
+                          : Text('Подтвердить'),
                     ),
                   ],
                 ),

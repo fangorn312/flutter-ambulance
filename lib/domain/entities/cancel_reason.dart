@@ -8,13 +8,12 @@ class CancelReason {
     required this.name,
     this.description = '',
   });
-}
 
-// Sample reasons, these would typically come from the API
-final List<CancelReason> cancelReasons = [
-  CancelReason(id: 1, name: 'Бригада занята'),
-  CancelReason(id: 2, name: 'Дальняя локация'),
-  CancelReason(id: 3, name: 'Технические проблемы'),
-  CancelReason(id: 4, name: 'Нет соответствующего специалиста'),
-  CancelReason(id: 5, name: 'Другая причина'),
-];
+  factory CancelReason.fromJson(Map<String, dynamic> json) {
+    return CancelReason(
+      id: json['id'] as int,
+      name: json['name'] ?? 'Без названия',
+      description: json['description'] ?? '',
+    );
+  }
+}

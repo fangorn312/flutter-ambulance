@@ -5,7 +5,7 @@ enum ButtonType { primary, secondary, text }
 
 class AppButton extends StatelessWidget {
   final String text;
-  final Function() onPressed;
+  final Function()? onPressed;
   final ButtonType type;
   final bool isLoading;
   final bool isFullWidth;
