@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/auth/login_screen.dart';
-//TODO
-// import '../screens/home/widgets/home_screen.txt';
-// import '../screens/call/call_list_screen.txt';
+import '../screens/home/home_screen.dart';
+// import '../screens/call/call_list_screen.dart';
 // import '../screens/call/call_detail_screen.dart';
 
 class AppRoutes {
@@ -23,17 +22,16 @@ class AppRouter {
     switch (settings.name) {
       case AppRoutes.login:
         return MaterialPageRoute(builder: (_) => LoginScreen());
-      // case AppRoutes.home:
-      //   return MaterialPageRoute(builder: (_) => HomeScreen());
-
-      // case AppRoutes.callList:
-      //   return MaterialPageRoute(builder: (_) => CallListScreen());
-      //
-      // case AppRoutes.callDetail:
-      //   final id = settings.arguments as String;
-      //   return MaterialPageRoute(
-      //     builder: (_) => CallDetailScreen(callId: id),
-      //   );
+      case AppRoutes.home:
+        return MaterialPageRoute(builder: (_) => HomeScreen());
+    // case AppRoutes.callList:
+    //   return MaterialPageRoute(builder: (_) => CallListScreen());
+    //
+    // case AppRoutes.callDetail:
+    //   final id = settings.arguments as String;
+    //   return MaterialPageRoute(
+    //     builder: (_) => CallDetailScreen(callId: id),
+    //   );
 
       default:
         return MaterialPageRoute(
