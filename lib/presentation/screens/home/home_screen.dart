@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   List<Call> _pendingCalls = [];
   List<Call> _completedCalls = [];
   BrigadeStatus _brigadeStatus = BrigadeStatus.available;
+  bool _mounted = true;
 
   late NotificationService _notificationService;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
@@ -48,12 +49,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   Future<void> _loadMockData() async {
+    if (!_mounted) return;
+
     setState(() {
       _isLoading = true;
     });
 
     // Симуляция загрузки данных
     await Future.delayed(Duration(milliseconds: 800));
+
+    if (!_mounted) return;
 
     setState(() {
       // Заглушечные данные для активных вызовов
@@ -128,11 +133,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   void dispose() {
+    _mounted = false;
     _tabController.dispose();
     super.dispose();
   }
 
   Future<void> _updateBrigadeStatus(BrigadeStatus status) async {
+    if (!_mounted) return;
+
     setState(() {
       _isLoading = true;
     });
@@ -140,12 +148,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     // Симуляция обновления статуса
     await Future.delayed(Duration(milliseconds: 500));
 
+    if (!_mounted) return;
+
     setState(() {
       _brigadeStatus = status;
       _isLoading = false;
     });
 
     // Показать диалог при определенных статусах
+    if (!_mounted) return;
+
     if (status == BrigadeStatus.available) {
       _showInfoDialog(
         'Статус обновлен',
@@ -160,6 +172,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   void _showInfoDialog(String title, String message) {
+    if (!_mounted) return;
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(

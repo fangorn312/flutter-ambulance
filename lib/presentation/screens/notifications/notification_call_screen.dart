@@ -41,6 +41,8 @@ class _NotificationCallScreenState extends State<NotificationCallScreen>
   }
 
   Future<void> _handleAccept(NotificationProvider provider) async {
+    if (!mounted) return;
+
     try {
       await provider.acceptCall();
       if (!mounted) return;
@@ -54,12 +56,16 @@ class _NotificationCallScreenState extends State<NotificationCallScreen>
   }
 
   void _showCancelReasonSelector() {
+    if (!mounted) return;
+
     setState(() {
       _showReasonDialog = true;
     });
   }
 
   Future<void> _handleReject(NotificationProvider provider) async {
+    if (!mounted) return;
+
     if (_selectedReason != null) {
       try {
         await provider.rejectCall(_selectedReason!.id);
@@ -68,8 +74,7 @@ class _NotificationCallScreenState extends State<NotificationCallScreen>
       } catch (e) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Ошибка при отклонении вызова: ${e.toString()}')),
+          SnackBar(content: Text('Ошибка при отклонении вызова: ${e.toString()}')),
         );
       }
     } else {
@@ -78,7 +83,6 @@ class _NotificationCallScreenState extends State<NotificationCallScreen>
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final notificationProvider = Provider.of<NotificationProvider>(context);
