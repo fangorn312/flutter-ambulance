@@ -1,5 +1,604 @@
-
 {
+	  "InspectionDictionaryTypeDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameky": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "inspectionDictionaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InspectionDictionaryDto"
+            },
+            "nullable": true
+          },
+          "neededInspections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InspectionDictionaryDto"
+            },
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+     
+	"/api/InspectionDictionaryType/GetAllWithArray": {
+      "get": {
+        "tags": [
+          "InspectionDictionaryType"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InspectionDictionaryTypeDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InspectionDictionaryTypeDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InspectionDictionaryTypeDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+	"/api/SpentMedicine/GetByidCard": {
+      "get": {
+        "tags": [
+          "SpentMedicine"
+        ],
+        "parameters": [
+          {
+            "name": "idCard",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpentMedicineDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpentMedicineDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpentMedicineDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+	
+	"/api/SpentMedicine/AddOrUpdate": {
+      "post": {
+        "tags": [
+          "SpentMedicine"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpentMedicineModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpentMedicineModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpentMedicineModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpentMedicineModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+	"/api/RouteHospitalization/Delete": {
+      "post": {
+        "tags": [
+          "RouteHospitalization"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    
+	 "SpentMedicineDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idMedicament": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idMedicamentNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idBrigade": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idBrigadeNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idCard": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idCardNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idParamedicReception": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idParamedicReceptionNavName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      
+	"RouteHospitalizationDto": {
+        "type": "object",
+        "properties": {
+          "dateSetup": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "strdateSetup": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idHospital": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idHospitalNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idCard": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCardNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "dutyDoctorFullname": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idResultHospitalization": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idResultHospitalizationNavName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      
+	"/api/RouteHospitalization/GetByidCard": {
+      "get": {
+        "tags": [
+          "RouteHospitalization"
+        ],
+        "parameters": [
+          {
+            "name": "idCard",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RouteHospitalizationDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RouteHospitalizationDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RouteHospitalizationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+	"/api/RouteHospitalization/AddOrUpdate": {
+      "post": {
+        "tags": [
+          "RouteHospitalization"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteHospitalizationModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteHospitalizationModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteHospitalizationModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteHospitalizationModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+	"/api/DiagnoseCard/AddOrUpdate": {
+      "post": {
+        "tags": [
+          "DiagnoseCard"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnoseCardModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnoseCardModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnoseCardModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnoseCardModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+	    "/api/DiagnoseCard/GetByidCard": {
+      "get": {
+        "tags": [
+          "DiagnoseCard"
+        ],
+        "parameters": [
+          {
+            "name": "idCard",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiagnoseCardDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiagnoseCardDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiagnoseCardDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+	"DiagnoseCardDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDiagnoseType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idDiagnoseTypeNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idMkb": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idMkbNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idCard": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCardNavName": {
+            "type": "string",
+            "nullable": true
+          },
+          "askSeniorDoctor": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      
 	"/api/ZadarmaApi/setAnswerYes": {
       "get": {
         "tags": [
