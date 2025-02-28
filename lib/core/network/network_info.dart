@@ -1,4 +1,4 @@
-// Network info 
+// Network info
 // lib/core/network/network_info.dart
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -13,6 +13,6 @@ class NetworkInfo {
   }
 
   Stream<ConnectivityResult> get onConnectivityChanged {
-    return connectivity.onConnectivityChanged;
+    return connectivity.onConnectivityChanged.map((results) => results.first);
   }
 }

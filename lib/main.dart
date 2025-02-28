@@ -4,6 +4,7 @@ import 'app.dart';
 import 'injection_container.dart' as di;
 import 'presentation/providers/app_provider.dart';
 import 'presentation/providers/auth_provider.dart';
+import 'presentation/providers/notification_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AppProvider()),
         ChangeNotifierProvider(create: (_) => di.sl<AuthProvider>()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: MyApp(),
     ),

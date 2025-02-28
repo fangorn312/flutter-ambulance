@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/services/notification_service.dart';
 import '../../../domain/entities/call.dart';
 import '../../../domain/entities/brigade_status.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/app_provider.dart';
+import '../../providers/notification_provider.dart';
 import '../../widgets/status_button.dart';
 import '../../widgets/call_item.dart';
 import '../../routes/app_router.dart';
@@ -27,11 +29,22 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   List<Call> _completedCalls = [];
   BrigadeStatus _brigadeStatus = BrigadeStatus.available;
 
+  late NotificationService _notificationService;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _loadMockData();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final notificationProvider = Provider.of<NotificationProvider>(
+          context, listen: false);
+
+      _notificationService =
+          NotificationService(notificationProvider, _navigatorKey);
+    });
   }
 
   Future<void> _loadMockData() async {
@@ -475,6 +488,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   void _navigateToCallDetail(String callId) {
     // Заглушка для навигации к деталям вызова
+    Future.delayed(Duration(seconds: 5), () {
+      final Map<String, dynamic> testNotification = {
+        'data': {
+          'json': '{"id":123,"idOccassionNavName":"Температура","isUnknownPatient":false,"addressFull":"Ленина 12","fullName":"Иванов Иван","phoneCaller":"778123","phonePatient":"771333","strbrigadeSetupDate":"2025-02-20 08:00:00","brigadeId":1}',
+          'employeeIds': [123, 45, 67],
+          'cancelCall': 'false'
+        },
+        'topic': 'topic1'
+      };
+
+      _notificationService.triggerTestNotification(testNotification);
+    });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Переход к деталям вызова №$callId'),
